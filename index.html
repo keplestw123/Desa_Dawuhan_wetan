@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="./resources/ol.css">
+        <link rel="stylesheet" href="resources/fontawesome-all.min.css">
+        <link rel="stylesheet" type="text/css" href="resources/horsey.min.css">
+        <link rel="stylesheet" type="text/css" href="resources/ol3-search-layer.min.css">
+        <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
+        <link rel="stylesheet" href="./resources/qgis2web.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+        <style>
+        html, body {
+            background-color: #ffffff;
+        }
+        .ol-control > * {
+            background-color: #f8f8f8!important;
+            color: #444444!important;
+            border-radius: 0px;
+        }
+        .ol-attribution a, .gcd-gl-input::placeholder, .search-layer-input-search::placeholder {
+            color: #444444!important;
+        }
+        .search-layer-input-search {
+            background-color: #f8f8f8!important;
+        }
+        .ol-control > *:focus, .ol-control >*:hover {
+            background-color: rgba(248, 248, 248, 0.7)!important;
+        } 
+        .ol-control {
+            background-color: rgba(255,255,255,.4) !important;
+            padding: 2px !important;
+        } 
+        </style>
+
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>Peta Interaktif Desa Kejawar</title>
+        <!-- Custom Styling -->
+        <style>
+            /* Navbar */
+                body {
+                    padding: 0;
+                    margin: 0;
+                    box-sizing: border-box;
+                    font-family: 'Arial', sans-serif;
+                    scroll-behavior: smooth;
+                    scroll-padding-top: 3rem;
+                    background-color: #f4f4f4; /* Light background color */
+                    color: #333; /* Dark text color for readability */
+                }
+        
+                /* Header Styles */
+                header {
+                    position: fixed;
+                    height: 60px;
+                    padding: 0 3rem;
+                    top: 0;
+                    right: 0;
+                    left: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    z-index: 9999;
+                    background-color: rgba(0, 0, 0, 0.6); /* Slightly darker background for a more modern look */
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                    border-radius: 10px;
+                    transition: background-color 0.3s ease;
+                }
+        
+                .logo {
+                    font-size: 28px;
+                    font-weight: bold;
+                    color: #ffffff; /* White color for the logo */
+                    letter-spacing: 1px; /* Slight space between letters */
+                    text-transform: uppercase;
+                }
+        
+                .logo span {
+                    color: #009dff; /* Add a touch of color for emphasis */
+                }
+        
+                /* Hamburger Menu Styles */
+                .hamburger {
+                    display: none; /* Hidden by default */
+                    cursor: pointer;
+                    z-index: 10001; /* Ensure hamburger is clickable above the content */
+                }
+        
+                .hamburger .line {
+                    width: 30px;
+                    height: 4px;
+                    background-color: #fff; /* White lines for contrast */
+                    margin: 5px 0;
+                    transition: transform 0.3s ease, opacity 0.3s ease;
+                }
+        
+                .hamburger .line.change:nth-child(1) {
+                    transform: rotate(45deg) translateY(9px);
+                }
+        
+                .hamburger .line.change:nth-child(2) {
+                    opacity: 0;
+                }
+        
+                .hamburger .line.change:nth-child(3) {
+                    transform: rotate(-45deg) translateY(-9px);
+                }
+        
+                /* Nav Styles */
+                .nav-bar {
+                    display: flex;
+                    align-items: center;
+                }
+        
+                .nav-bar ul {
+                    list-style: none;
+                    display: flex;
+                    margin: 0;
+                }
+        
+                .nav-bar li {
+                    margin-left: 20px;
+                }
+        
+                .nav-bar a {
+                    color: #fff;
+                    text-decoration: none;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    font-size: 16px;
+                    letter-spacing: 1px;
+                    transition: color 0.3s ease, transform 0.3s ease;
+                }
+        
+                .nav-bar a:hover {
+                    color: #009dff; /* Hover effect with accent color */
+                    transform: scale(1.1);
+                }
+        
+                /* Media Query for Mobile */
+                @media (max-width: 768px) {
+                    .hamburger {
+                        display: block; /* Show hamburger menu on mobile */
+                    }
+        
+                    .nav-bar {
+                        display: none; /* Hide nav on mobile */
+                        position: absolute;
+                        top: 60px;
+                        right: 0;
+                        background-color: rgba(0, 0, 0, 0.9); /* Darker background for mobile */
+                        width: 250px;
+                        padding: 10px;
+                        border-radius: 8px;
+                        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+                        transition: transform 0.3s ease-in-out;
+                        transform: translateX(100%);
+                    }
+        
+                    .nav-bar.active {
+                        display: flex;
+                        transform: translateX(0); /* Slide in the nav */
+                    }
+        
+                    .nav-bar ul {
+                        flex-direction: column;
+                        padding: 0;
+                        margin: 0;
+                    }
+        
+                    .nav-bar li {
+                        margin: 15px 0;
+                    }
+                }
+
+
+            /* Hero Section */
+            .hero {
+                background: url('images/bg.jpg') no-repeat center center/cover;
+                color: #fff;
+                text-align: center;
+                padding: 5rem 2rem;
+                background-size: cover;
+                background-position: center center;
+                min-height: 100vh; /* Ganti height dengan min-height */
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+                margin-bottom: 1.5rem;
+                font-weight: bold;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+            }
+
+            .hero p {
+                font-size: 1.5rem;
+                margin-bottom: 2rem;
+                line-height: 1.6;
+                max-width: 700px;
+                text-align: center;
+                font-style: italic;
+            }
+
+            .cta-button {
+                display: inline-block;
+                padding: 0.8rem 2rem;
+                background-color: #333;
+                color: #fff;
+                text-decoration: none;
+                font-weight: bold;
+                border-radius: 50px;
+                font-size: 1.2rem;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .cta-button:hover {
+                background-color: #555;
+                transform: translateY(-3px);
+                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            }
+
+            .cta-button:active {
+                transform: translateY(1px);
+            }
+
+
+
+            /* Gaya untuk Visi dan Misi */
+            #visi-misi {
+                background: linear-gradient(135deg, #a7f9dc, #ffffff); /* Gradasi warna lembut */
+                padding: 40px 50px; /* Padding kiri dan kanan lebih besar untuk desktop */
+                width: 100%;
+                height: auto; /* Membuat tinggi konten dinamis mengikuti isi */
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+                overflow: auto;
+            }
+
+            /* Container teks Visi dan Misi */
+            .visi-misi-text {
+                text-align: center;
+                width: 100%;
+                max-width: 1300px; /* Lebar maksimum lebih besar untuk desktop */
+                padding: 40px;
+                box-sizing: border-box;
+                background-color: #fff;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                margin: 30px auto; /* Memberikan jarak atas dan bawah lebih besar */
+            }
+
+            /* Gaya untuk Judul Visi dan Misi */
+            .visi-misi-text h2 {
+                font-size: 2.5rem;
+                color: #333;
+                margin-bottom: 20px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            /* Gaya untuk Isi Visi */
+            .visi {
+                font-size: 1.3rem;
+                line-height: 1.8;
+                color: #555;
+                margin-bottom: 20px;
+            }
+
+            /* Gaya untuk Isi Misi */
+            .misi {
+                font-size: 1.3rem;
+                line-height: 1.8;
+                color: #555;
+            }
+
+            /* Responsif untuk ukuran layar kecil (ponsel) */
+            @media (max-width: 480px) {
+                #visi-misi {
+                    padding: 15px; /* Padding lebih kecil pada layar kecil */
+                }
+
+                .visi-misi-text {
+                    padding: 20px;
+                    width: 100%;
+                    max-width: 100%; /* Pastikan tidak melebihi lebar layar */
+                    margin: 10px auto;
+                }
+
+                .visi-misi-text h2 {
+                    font-size: 1.8rem; /* Ukuran judul lebih kecil pada ponsel */
+                }
+
+                .visi-misi-text .visi,
+                .visi-misi-text .misi {
+                    font-size: 1rem; /* Ukuran teks lebih kecil pada ponsel */
+                }
+            }
+
+            /* Responsif untuk ukuran layar medium (tablet dan desktop kecil) */
+            @media (max-width: 768px) {
+                #visi-misi {
+                    padding: 25px; /* Padding lebih besar pada tablet */
+                }
+
+                .visi-misi-text {
+                    max-width: 90%; /* Menyesuaikan lebar container untuk tablet */
+                }
+
+                .visi-misi-text h2 {
+                    font-size: 2rem; /* Ukuran judul sedikit lebih kecil pada tablet */
+                }
+
+                .visi-misi-text .visi,
+                .visi-misi-text .misi {
+                    font-size: 1.1rem; /* Ukuran teks sedikit lebih besar pada tablet */
+                }
+            }
+
+            /* Gaya untuk Foto Kegiatan */
+            .foto-kegiatan {
+                margin-top: 30px;
+                width: 100%;
+                text-align: center;
+                padding: 0 10px; /* Kurangi padding untuk layar kecil */
+                box-sizing: border-box;
+            }
+
+            /* Grid untuk Foto Kegiatan */
+            .foto-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Kolom dinamis */
+                gap: 20px;
+                margin-top: 20px;
+                padding: 0 10px; /* Menyesuaikan padding */
+                box-sizing: border-box;
+            }
+
+            /* Gaya untuk Foto Item */
+            .foto-item img {
+                width: 100%;
+                height: 200px; /* Ukuran gambar tetap, sesuaikan dengan lebar kontainer */
+                object-fit: cover;
+                border-radius: 12px;
+            }
+
+            /* Responsif untuk ukuran layar kecil (ponsel) */
+            @media (max-width: 480px) {
+                .foto-grid {
+                    grid-template-columns: 1fr; /* Satu kolom pada layar kecil */
+                    gap: 15px; /* Kurangi jarak antar item */
+                }
+
+                .foto-item img {
+                    height: auto; /* Biarkan tinggi menyesuaikan */
+                }
+            }
+
+
+
+
+            /* Geografis Section */
+            #geografis {
+                padding: 70px 20px;
+                background: linear-gradient(135deg,  #a7f9dc, #ffffff);
+                font-family: Arial, sans-serif;
+                color: #333;
+                text-align: center;
+            }
+
+            /* Judul */
+            #geografis h2 {
+                font-size: 2.8rem; /* Memperbesar ukuran font */
+                margin-bottom: 30px; /* Menambah jarak bawah */
+                color: #5e4c5a;
+                font-weight: 600; /* Lebih tebal dan modern */
+                text-transform: uppercase; /* Membuat huruf besar */
+                letter-spacing: 2px; /* Memberikan jarak antar huruf */
+            }
+
+            /* Map Container */
+            #map-container {
+                position: relative;
+                margin: 30px auto;
+                max-width: 90%; /* Membuat map lebih responsif */
+                width: 100%;
+                height: 450px; /* Menambah tinggi */
+                border-radius: 20px; /* Lebih melengkung */
+                overflow: hidden;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Bayangan lebih halus */
+                border: 3px solid #5e4c5a; /* Menambah ketebalan border */
+                background: #f5f5dc; /* Warna krem */
+            }
+
+            /* Map */
+            #map {
+                width: 100%;
+                height: 100%;
+                position: relative;
+            }
+
+            /* Hilangkan elemen di pojok kiri bawah */
+            #map .ol-attribution {
+                display: none !important;
+            }
+
+            /* Popup Closer */
+            .ol-popup-closer {
+                display: inline-block;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                width: 30px; /* Menyesuaikan ukuran lebih kecil */
+                height: 30px; /* Menyesuaikan ukuran lebih kecil */
+                padding: 5px;
+                text-decoration: none;
+                color: #fff; /* Warna teks lebih terang */
+                font-weight: bold;
+                font-size: 1rem;
+                background: #5e4c5a; /* Warna latar belakang */
+                border-radius: 50%;
+                text-align: center;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                cursor: pointer;
+                transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; /* Animasi hover */
+            }
+
+            .ol-popup-closer:hover {
+                transform: scale(1.2);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                background: #bfa4b8; /* Ubah latar saat hover */
+            }
+
+            /* Responsivitas untuk layar kecil */
+            @media screen and (max-width: 768px) {
+                #geografis {
+                    padding: 50px 20px; /* Mengurangi padding pada layar kecil */
+                }
+
+                #map-container {
+                    height: 300px; /* Menyesuaikan tinggi map pada layar kecil */
+                }
+
+                #geografis h2 {
+                    font-size: 2.2rem; /* Mengurangi ukuran font judul */
+                }
+
+                .ol-popup-closer {
+                    top: 8px;
+                    right: 8px;
+                    width: 28px; /* Ukuran lebih kecil pada layar kecil */
+                    height: 28px;
+                }
+            }
+
+            @media screen and (max-width: 480px) {
+                #geografis {
+                    padding: 40px 10px; /* Mengurangi padding pada layar sangat kecil */
+                }
+
+                #map-container {
+                    height: 250px; /* Menyesuaikan tinggi map pada layar HP */
+                }
+
+                #geografis h2 {
+                    font-size: 1.8rem; /* Ukuran font lebih kecil */
+                }
+
+                .ol-popup-closer {
+                    top: 5px;
+                    right: 5px;
+                    width: 25px; /* Ukuran lebih kecil */
+                    height: 25px;
+                }
+            }
+
+
+            /* Paragraph */
+            #geografis p {
+                font-size: 1.1rem;
+                line-height: 1.8;
+                color: #555;
+                margin: 20px auto;
+                max-width: 800px;
+                padding: 0 15px; /* Adding padding to avoid text touching the edges */
+            }
+
+            /* List Style */
+            #geografis ul {
+                list-style: none;
+                margin: 20px auto;
+                padding: 0;
+                max-width: 800px;
+                width: 100%; /* Ensure ul takes full width within its container */
+            }
+
+            #geografis ul li {
+                font-size: 1rem;
+                margin-bottom: 12px; /* Slightly larger margin for better separation */
+                padding: 12px; /* Increased padding for better spacing */
+                background: #fff;
+                border: 1px solid #ddd; /* Lighter border color for better contrast */
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Slightly larger shadow for depth */
+                text-align: left;
+                color: #333;
+            }
+
+            /* Responsive Design */
+            @media screen and (max-width: 768px) {
+                #geografis h2 {
+                    font-size: 2rem; /* Slightly smaller heading for medium screens */
+                }
+
+                #map-container {
+                    height: 300px; /* Adjust map height for medium screens */
+                }
+
+                #geografis p {
+                    font-size: 1rem; /* Slightly smaller font for readability on tablets */
+                }
+
+                #geografis ul li {
+                    font-size: 0.9rem; /* Smaller font for list items */
+                    margin-bottom: 15px; /* Increased bottom margin to prevent crowding */
+                    padding: 14px; /* More padding to make each list item feel spacious */
+                }
+            }
+
+            @media screen and (max-width: 480px) {
+                #geografis h2 {
+                    font-size: 1.8rem; /* Slightly smaller heading for mobile devices */
+                }
+
+                #map-container {
+                    height: 250px; /* Reduce map size on mobile */
+                }
+
+                #geografis p {
+                    font-size: 0.9rem; /* Adjust paragraph text size for better readability */
+                    padding: 0 10px; /* Less padding for smaller screens */
+                }
+
+                #geografis ul li {
+                    font-size: 0.8rem; /* Further reduce font size for mobile */
+                    padding: 12px; /* Adjust padding for better mobile display */
+                }
+            }
+
+
+
+
+
+            /* Section Kontak */
+            .contact-section {
+                padding: 70px 20px;
+                background: linear-gradient(135deg,#a7f9dc, #ffffff);
+                color: #fff;
+                font-family: Arial, sans-serif;
+                min-height: 100vh;
+            }
+
+            /* Judul dan Paragraf */
+            .contact-section h2 {
+                text-align: center;
+                font-size: 3rem;
+                margin-bottom: 25px;
+                color: #050404;
+            }
+
+            .contact-section p {
+                text-align: center;
+                color: #0e0b0b;
+                margin-bottom: 50px;
+                font-size: 1.2rem;
+            }
+
+            /* Kontainer Formulir dan Info Kontak */
+            .contact-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 30px;
+                max-width: 1200px;
+                margin: 0 auto; /* Menengahkan kontainer */
+                padding: 0 20px; /* Tambahkan jarak kanan dan kiri */
+            }
+
+            /* Formulir Kontak */
+            .contact-form {
+                flex: 1;
+                max-width: 600px;
+                min-width: 300px;
+                width: 100%;
+                background-color: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+                color: #fff;
+                margin: 0 auto; /* Form selalu berada di tengah */
+            }
+
+            /* Grup Formulir */
+            .contact-form .form-group {
+                margin-bottom: 20px;
+                width: 100%;
+                padding: 0 10px; /* Jarak seragam untuk grup form */
+                box-sizing: border-box;
+            }
+
+            /* Input dan Textarea */
+            .contact-form input,
+            .contact-form textarea {
+                width: calc(100% - 20px);
+                padding: 12px 15px;
+                border: none;
+                border-radius: 8px;
+                font-size: 1rem;
+                color: #333;
+                margin: 0 auto;
+            }
+
+            .contact-form input {
+                border: 2px solid #8f94fb;
+                background-color: #fff;
+            }
+
+            .contact-form textarea {
+                border: 2px solid #8f94fb;
+                background-color: #fff;
+                resize: vertical;
+                min-height: 120px;
+            }
+
+            /* Tombol Kirim */
+            .btn-submit {
+                display: block;
+                background: linear-gradient(135deg, #8f94fb, #4e54c8);
+                color: #fff;
+                padding: 15px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.2rem;
+                transition: transform 0.3s ease, box-shadow 0.3s;
+                margin: 0 auto;
+                width: calc(100% - 20px);
+            }
+
+            .btn-submit:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+
+            /* Informasi Kontak */
+            .contact-info {
+                flex: 1;
+                max-width: 600px;
+                min-width: 300px;
+                width: 100%;
+                background-color: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+                color: #fff;
+                margin: 0 auto; /* Informasi kontak selalu berada di tengah */
+            }
+
+            /* Judul Informasi Kontak */
+            .contact-info h3 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+                text-align: center;
+                color: #1c1717;
+            }
+
+            /* Paragraf Informasi Kontak */
+            .contact-info p {
+                margin-bottom: 15px;
+                color: #1c1919;
+                text-align: center; /* Memposisikan teks di tengah */
+            }
+
+            /* Ikon Sosial Media */
+            .social-icons {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                margin-top: 20px;
+            }
+
+            .social-icons a {
+                display: inline-block;
+                width: 50px;
+                height: 50px;
+                background-color: rgba(255, 255, 255, 0.2);
+                color: #141010;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 50px;
+                font-size: 1.2rem;
+                transition: transform 0.3s, background-color 0.3s;
+            }
+
+            .social-icons a:hover {
+                transform: scale(1.1);
+                background-color: #8f94fb;
+            }
+
+            /* Responsivitas untuk layar kecil */
+            @media screen and (max-width: 768px) {
+                .contact-container {
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 30px;
+                    padding: 0 20px; /* Pastikan jarak tetap ada */
+                }
+
+                .contact-form,
+                .contact-info {
+                    max-width: 100%;
+                    margin: 0 auto;
+                    padding: 20px; /* Tambahkan padding */
+                    box-sizing: border-box;
+                }
+            }
+
+            @media screen and (max-width: 480px) {
+                .contact-container {
+                    padding: 0 15px; /* Lebih kecil pada layar HP */
+                }
+
+                .contact-section h2 {
+                    font-size: 2.5rem;
+                }
+
+                .contact-info h3 {
+                    font-size: 1.8rem;
+                }
+
+                .btn-submit {
+                    font-size: 1rem;
+                    width: calc(100% - 30px);
+                }
+
+                .social-icons a {
+                    width: 45px;
+                    height: 45px;
+                    line-height: 45px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Navbar -->
+        <header>
+            <div class="logo">Dawuhan<span class="child-title">Wetan</span></div>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+            <nav class="nav-bar">
+                <ul>
+                    <li><a href="#beranda" class="active">Beranda</a></li>
+                    <li><a href="#visi-misi" class="scroll-to-visi-misi">Profil</a></li>
+                    <li><a href="#geografis">Geografis</a></li>
+                    <li><a href="#contact">Kontak</a></li>
+                </ul>
+            </nav>
+        </header>
+
+
+        <!-- Beranda Section -->
+        <section id="beranda">
+            <div class="hero">
+                <h1>Website informasi desa Dawuhan Wetan</h1>
+                <p>Desa Dawuhan Wetan, terletak di Kedungbanteng, Banyumas, dikenal dengan pembibitan tanaman keras dan hias serta industri kecil seperti pembuatan bantal dan pakaian. Dengan karang taruna yang berprestasi dan warisan budaya seperti Arca Lingga dan Yoni, desa ini menawarkan pesona alam dan kearifan lokal yang kaya.</p>
+                <a href="#geografis" class="cta-button">Lihat Peta</a>
+            </div>
+        </section>
+
+        <!-- Visi dan Misi Section -->
+        <section id="visi-misi">
+            <div class="container">
+                <div class="visi-misi-text">
+                    <h2>Visi dan Misi Desa Dawuhan Wetan</h2>
+                    <div class="visi">
+                        <p>
+                            <strong>Visi :</strong> Mewujudkan Pemerintah Desa yang amanah menuju masyarakat Desa Dawuhan Wetan yang sejahtera dan berkeadilan berdasarkan iman dan taqwa kepada Allah SWT.
+                        </p>
+                    </div>
+                    <div class="misi">
+                        <p><strong>Misinya</strong> Desa Kejawar:</p>
+                        <ul>
+                            <li>
+                                Melaksanakan Pemerintahan Desa sesuai dengan peraturan dan perundang-undangan yang berlaku.
+                            </li>
+                            <li>
+                                Melaksanakan tugas pokok dan fungsi Kepala Desa dan segenap Perangkat Desa dalam bidang pemerintahan, pembangunan dan kemasyarakatan.
+                            </li>
+                            <li>
+                                Melaksanakan pembangunan di bidang pendidikan, kesehatan, pekerjaan umum dan tata ruang serta kawasan permukiman.
+                            </li>
+                            <li>
+                                Melaksanakan pemberdayaan masyarakat di bidang pertanian, perikanan, UMKM, perindustrian dan strategi pemasaran guna meningkatkan kesejahteraan dan ekonomi masyarakat.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+    
+                <!-- Kontainer untuk Foto Kegiatan Desa -->
+                <div class="foto-kegiatan">
+                    <h3>Kegiatan Desa Dawuhan Wetan</h3>
+                    <div class="foto-grid">
+                        <div class="foto-item">
+                            <img src="images/kegiatan1.jpg" alt="Kegiatan Desa 1">
+                            <div class="foto-description">
+                                <p>Pelatihan keterampilan untuk masyarakat dalam meningkatkan ekonomi desa.</p>
+                            </div>
+                        </div>
+                        <div class="foto-item">
+                            <img src="images/kegiatan2.jpeg" alt="Kegiatan Desa 2">
+                            <div class="foto-description">
+                                <p>Program pengajian rutinan warga desa.</p>
+                            </div>
+                        </div>
+                        <div class="foto-item">
+                            <img src="images/kegiatan3.jpg" alt="Kegiatan Desa 3">
+                            <div class="foto-description">
+                                <p>Penyuluhan lingkungan hidup untuk menjaga kelestarian alam.</p>
+                            </div>
+                        </div>
+                        <div class="foto-item">
+                            <img src="images/kegiatan4.jpg" alt="Kegiatan Desa 4">
+                            <div class="foto-description">
+                                <p>Rutinitas senam warga.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </section>
+
+        <!-- Geografis Section -->
+        <section id="geografis">
+            <h2>Lokasi Desa Dawuhan Wetan</h2>
+            <div id="map-container">
+                <div id="map">
+                    <div id="popup" class="ol-popup">
+                        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                        <div id="popup-content"></div>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Desa Dawuhan Wetan</strong> Desa Dawuhan Wetan di Kecamatan Kedungbanteng, Banyumas, Jawa Tengah, dengan penduduk sekitar 4.575 jiwa, dikenal sebagai kawasan pembibitan tanaman keras dan hias terbesar di Kabupaten Banyumas, memiliki aktivitas industri kecil seperti pembuatan bantal, guling, spring bed, dan penjahitan pakaian, serta didukung oleh karang taruna yang berprestasi hingga tingkat provinsi, dengan tambahan potensi budaya berupa Arca Lingga dan Yoni.</p>
+            <ul>
+                <li>4 Rukun Warga (RW)</li>
+                <li>14 Rukun Tetangga (RT)</li>
+            </ul>
+        </section>
+
+
+        <!-- kontak -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <h2>Hubungi Kami</h2>
+                <p>Kami siap membantu Anda. Silakan isi formulir di bawah ini atau hubungi kami langsung melalui detail kontak.</p>
+                <div class="contact-container">
+                    <!-- Formulir Kontak -->
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <label for="name">Nama</label>
+                            <input type="text" id="name" name="name" placeholder="Masukkan nama Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Pesan</label>
+                            <textarea id="message" name="message" placeholder="Tulis pesan Anda di sini..." rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">Kirim Pesan</button>
+                    </form>
+        
+                    <!-- Informasi Kontak -->
+                    <div class="contact-info">
+                        <h3>Detail Kontak</h3>
+                        <p><strong>Alamat:</strong> Jalan Raya No.123, Jakarta</p>
+                        <p><strong>Email:</strong> info@contohwebsite.com</p>
+                        <p><strong>Telepon:</strong> +62 812 3456 7890</p>
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const hamburger = document.querySelector(".hamburger");
+                    const navBar = document.querySelector(".nav-bar");
+                    const lines = document.querySelectorAll(".hamburger .line");
+                    const scrollLink = document.querySelector('.scroll-to-visi-misi');
+        
+                    // Toggle the active class to show/hide the nav menu
+                    hamburger.addEventListener("click", () => {
+                        navBar.classList.toggle("active");
+        
+                        // Toggle the 'change' class on each line to animate the hamburger icon
+                        lines.forEach(line => line.classList.toggle("change"));
+                    });
+                });
+        </script>
+        <script src="resources/qgis2web_expressions.js"></script>
+        <script src="resources/proj4.js"></script>
+        <script>proj4.defs('EPSG:4326','+proj=longlat +datum=WGS84 +no_defs');</script>
+        <script src="./resources/functions.js"></script>
+        <script src="./resources/ol.js"></script>
+        <script src="resources/horsey.min.js"></script>
+        <script src="resources/ol3-search-layer.js"></script>
+        <script src="./resources/ol-layerswitcher.js"></script>
+        <script src="layers/Desa_0.js"></script><script src="layers/RW_1.js"></script><script src="layers/RT_2.js"></script><script src="layers/Lapangan_3.js"></script><script src="layers/bangunan1_4.js"></script><script src="layers/bangunan_5.js"></script><script src="layers/Sungai_6.js"></script><script src="layers/jalan_7.js"></script><script src="layers/tempatibadah_8.js"></script><script src="layers/Pendidikan_9.js"></script><script src="layers/Kades_10.js"></script>
+        <script src="styles/Desa_0_style.js"></script><script src="styles/RW_1_style.js"></script><script src="styles/RT_2_style.js"></script><script src="styles/Lapangan_3_style.js"></script><script src="styles/bangunan1_4_style.js"></script><script src="styles/bangunan_5_style.js"></script><script src="styles/Sungai_6_style.js"></script><script src="styles/jalan_7_style.js"></script><script src="styles/tempatibadah_8_style.js"></script><script src="styles/Pendidikan_9_style.js"></script><script src="styles/Kades_10_style.js"></script>
+        <script src="./layers/layers.js" type="text/javascript"></script> 
+        <script src="./resources/Autolinker.min.js"></script>
+        <script src="./resources/qgis2web.js"></script>
+    </body>
+</html>
